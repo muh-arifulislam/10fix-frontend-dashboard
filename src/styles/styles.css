@@ -1,0 +1,43 @@
+.text-link {
+  color: black;
+  font-weight: 500;
+}
+.text-link:hover {
+  text-decoration: underline;
+  color: black;
+}
+
+.login-section {
+  background: linear-gradient(to bottom, #f1f4f9, #dff1ff);
+}
+.color {
+  position: absolute;
+  filter: blur(150px);
+}
+
+.color:nth-child(1) {
+  width: 300px;
+  height: 300px;
+  background: #90c5db;
+  top: 0;
+  left: 0;
+  transform: translateX(50%) translateY(50%);
+}
+
+.color:nth-child(2) {
+  width: 300px;
+  height: 300px;
+  background: #a4bcc7;
+  top: 0;
+  right: 0;
+  transform: translateX(-50%) translateY(50%);
+}
+
+.container {
+  padding: 30px 60px;
+  position: relative;
+  background: #ffffff59;
+  border-radius: 15px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+}
