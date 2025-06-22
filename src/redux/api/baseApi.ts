@@ -16,7 +16,7 @@ import { auth } from "../../firebase.init";
 //http://localhost:5000/api/v1
 // https://10fix.vercel.app
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api/v1",
+  baseUrl: "https://10fix.vercel.app/api/v1",
   credentials: "omit",
   prepareHeaders: (headers: Headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
