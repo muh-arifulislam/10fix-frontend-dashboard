@@ -1,5 +1,5 @@
 import MainLayout from "./layout/MainLayout";
-import ProtectedRoute from "./layout/ProtectedRoute";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 function App() {
   return (

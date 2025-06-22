@@ -1,4 +1,4 @@
-import { Menu, MenuProps } from "antd";
+import { Button, Menu, MenuProps } from "antd";
 import Sider from "antd/es/layout/Sider";
 
 import {
@@ -6,14 +6,20 @@ import {
   PieChartOutlined,
   RiseOutlined,
   CommentOutlined,
-  ReadOutlined,
+  // ReadOutlined,
   FileDoneOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { NavLink } from "react-router-dom";
-import { useAppSelector } from "../redux/hook";
-import { selectCurrentUser } from "../redux/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hook";
+import { logout, selectCurrentUser } from "../redux/features/auth/authSlice";
+import { useSignOut } from "react-firebase-hooks/auth";
+import { auth } from "../firebase.init";
 
 const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
+  const dispatch = useAppDispatch();
+  const [signOut] = useSignOut(auth);
+
   const user = useAppSelector(selectCurrentUser);
   const userRole = {
     ADMIN: "admin",
@@ -70,23 +76,23 @@ const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
         },
       ],
     },
-    {
-      key: "Blogs",
-      icon: <ReadOutlined />,
-      label: "Blogs",
-      children: [
-        {
-          key: "create-blogs",
-          label: (
-            <NavLink to={"/dashboard/blogs/create-new"}>Create Blog</NavLink>
-          ),
-        },
-        {
-          key: "manage-blogs",
-          label: <NavLink to={"/dashboard/blogs"}>Manage Blogs</NavLink>,
-        },
-      ],
-    },
+    // {
+    //   key: "Blogs",
+    //   icon: <ReadOutlined />,
+    //   label: "Blogs",
+    //   children: [
+    //     {
+    //       key: "create-blogs",
+    //       label: (
+    //         <NavLink to={"/dashboard/blogs/create-new"}>Create Blog</NavLink>
+    //       ),
+    //     },
+    //     {
+    //       key: "manage-blogs",
+    //       label: <NavLink to={"/dashboard/blogs"}>Manage Blogs</NavLink>,
+    //     },
+    //   ],
+    // },
   ];
   switch (user?.role) {
     case userRole.ADMIN:
@@ -149,6 +155,32 @@ const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
         defaultSelectedKeys={["4"]}
         items={sidebarItems}
       />
+      <div
+        style={{
+          position: "fixed",
+          left: 0,
+          bottom: 0,
+          width: collapsed ? 50 : 200,
+          padding: "16px 0",
+          background: "#001529",
+          display: "flex",
+          justifyContent: "center",
+          zIndex: 10,
+        }}
+      >
+        <Button
+          type="primary"
+          danger
+          icon={<LogoutOutlined />}
+          style={{ width: collapsed ? 40 : 160 }}
+          onClick={() => {
+            dispatch(logout());
+            signOut();
+          }}
+        >
+          {!collapsed && "Logout"}
+        </Button>
+      </div>
     </Sider>
   );
 };

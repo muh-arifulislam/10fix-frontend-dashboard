@@ -21,6 +21,7 @@ import {
 import CopyToClipboard from "../../../component/ui/CopyToClipboard";
 import { useState } from "react";
 import { TCustomerStatus } from "../../../types";
+import dayjs from "dayjs";
 
 export type TFullName = {
   firstName: string;
@@ -41,6 +42,7 @@ interface DataType {
   address: TAddress;
   orders: string[];
   status: string;
+  isDeleted: boolean;
 }
 
 const columns: TableColumnsType<DataType> = [
@@ -57,21 +59,23 @@ const columns: TableColumnsType<DataType> = [
   {
     title: "Service Date",
     dataIndex: "dateOfService",
+    render: (data) => <>{dayjs(data).format("YYYY-MM-DD")}</>,
   },
   {
     title: "Order Amount",
     dataIndex: "orderAmount",
+    render: () => <>N/A</>,
   },
   {
     title: "Status",
     dataIndex: "",
     key: "status",
+    width: 120,
+
     render: (record: DataType) => (
-      <Space>
-        <Button size="small" type="primary">
-          {record.status}
-        </Button>
-      </Space>
+      <Button size="small" type="default" danger={record.isDeleted}>
+        {record.isDeleted ? "Drafted" : record.status}
+      </Button>
     ),
   },
 ];

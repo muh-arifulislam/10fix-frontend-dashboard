@@ -23,6 +23,7 @@ import {
   useUpdateOrderStatusMutation,
 } from "../../../redux/features/order/orderApi";
 import { SearchProps } from "antd/es/input";
+import { toast } from "sonner";
 
 const { Search } = Input;
 
@@ -44,7 +45,22 @@ const ManageOrders = () => {
   const [handleUpdateOrderStatus, { isLoading: isUpdateStatusLoading }] =
     useUpdateOrderStatusMutation();
 
-  const [hanldeSoftDeleteOrder] = useSoftDeleteOrderMutation();
+  const [softDeleteOrder] = useSoftDeleteOrderMutation();
+
+  const handleSoftDeleteOrder = async (orderId: string) => {
+    try {
+      const result = await softDeleteOrder(orderId);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ("error" in result && (result.error as any)?.data?.message) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        throw new Error((result.error as any).data.message);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.message || "Failed to delete order. Please try again!");
+    }
+  };
 
   const columns: TableColumnsType<TOrder> = [
     {
@@ -135,8 +151,8 @@ const ManageOrders = () => {
                       Modal.confirm({
                         title: "Confirm!!",
                         content: "Are you sure??",
-                        onOk: async () => {
-                          await hanldeSoftDeleteOrder(order.orderId);
+                        onOk: () => {
+                          handleSoftDeleteOrder(order.orderId);
                         },
                         footer: (_, { OkBtn, CancelBtn }) => (
                           <>

@@ -5,6 +5,7 @@ import { Navigate } from "react-router-dom";
 
 const ProtectedAdmin = ({ children }: { children: React.ReactNode }) => {
   const user = useAppSelector(selectCurrentUser);
+
   if (user?.role === "superAdmin" || user?.role === "admin") {
     return children;
   } else {

@@ -4,7 +4,7 @@ const reviewApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllReviews: builder.query({
       query: () => ({
-        url: "/reviews/",
+        url: "/reviews",
         method: "GET",
       }),
       providesTags: ["review"],

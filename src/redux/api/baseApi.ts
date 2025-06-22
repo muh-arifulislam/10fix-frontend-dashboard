@@ -14,9 +14,9 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../firebase.init";
 
 //http://localhost:5000/api/v1
-// https://server.10fix.com.bd/api/v1
+// https://10fix.vercel.app
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://server.10fix.com.bd/api/v1",
+  baseUrl: "http://localhost:5000/api/v1",
   credentials: "omit",
   prepareHeaders: (headers: Headers, { getState }) => {
     const token = (getState() as RootState).auth.token;

@@ -1,47 +1,89 @@
 import { Row } from "antd";
 import GoogleLogin from "../../component/button/GoogleLogin";
-import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
+import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase.init";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { toast } from "sonner";
 import { verifyToken } from "../../utils/verifyToken";
 import { setUser } from "../../redux/features/auth/authSlice";
 import { useAppDispatch } from "../../redux/hook";
+import { Form, Input, Button } from "antd";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { Divider } from "antd";
+import {
+  useLoginWithEmailPasswordMutation,
+  useLoginWithGmailMutation,
+} from "../../redux/features/auth/authApi";
 
 const Login = () => {
+  const [signInWithGoogle] = useSignInWithGoogle(auth);
+  const [loginWithEmailPassword] = useLoginWithEmailPasswordMutation();
+  const [loginWithGmail] = useLoginWithGmailMutation();
+
   const navigate = useNavigate();
-  const [user, loading] = useAuthState(auth);
-  const [signOut] = useSignOut(auth);
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    if (!loading) {
-      if (user) {
-        const toastId = toast.loading(
-          "Authentication is ongoing, Please wait!"
-        );
-        fetch("https://server.10fix.com.bd/api/v1/auth/login", {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({ email: user.email }),
-        })
-          .then((res) => res.json())
-          .then(async (data) => {
-            if (data.success) {
-              toast.success("Login successful", { id: toastId });
-              const user = verifyToken(data.data.accessToken);
-              dispatch(setUser({ user: user, token: data.data.accessToken }));
-              navigate("/dashboard/orders");
-            } else {
-              await signOut();
-              toast.error("You are not authorized!!!", { id: toastId });
-            }
-          });
+
+  const handleEmailPasswordLogin = async (data: {
+    email: string;
+    password: string;
+  }) => {
+    const toastId = toast.loading("Authentication is ongoing, Please wait!");
+    try {
+      const res = await loginWithEmailPassword(data);
+
+      if ("data" in res && res.data?.data?.accessToken) {
+        const userData = verifyToken(res.data.data.accessToken);
+        if (!userData) {
+          throw new Error("Invalid token");
+        }
+
+        dispatch(setUser({ user: userData, token: res.data.data.accessToken }));
+        toast.success("Login successful", { id: toastId });
+        navigate("/dashboard/orders");
+      } else if ("error" in res) {
+        throw new Error("Login failed");
+      } else {
+        throw new Error("Login failed");
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error?.message ?? "Login failed", { id: toastId });
     }
-  }, [user, loading]);
+  };
+
+  const handleGmailLogin = async () => {
+    const toastId = toast.loading("Authentication is ongoing, Please wait!");
+
+    try {
+      const result = await signInWithGoogle();
+      if (!result) {
+        throw new Error("Google sign-in failed");
+      }
+
+      const user = result.user;
+      const idToken = await user.getIdToken();
+
+      const res = await loginWithGmail({ token: idToken });
+
+      if ("data" in res && res.data?.data?.accessToken) {
+        const userData = verifyToken(res.data.data.accessToken);
+        if (!userData) {
+          throw new Error("Invalid token");
+        }
+
+        dispatch(setUser({ user: userData, token: res.data.data.accessToken }));
+        toast.success("Login successful", { id: toastId });
+        navigate("/dashboard/orders");
+      } else if ("error" in res) {
+        throw new Error("Login failed");
+      } else {
+        throw new Error("Login failed");
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error?.message ?? "Login failed", { id: toastId });
+    }
+  };
 
   return (
     <Row
@@ -69,9 +111,54 @@ const Login = () => {
           </div>
           <h3 style={{ margin: "30px" }}>Login to Your Account</h3>
           <div>
-            <GoogleLogin />
-            <div style={{ textAlign: "center", marginTop: "20px" }}>
-              <small>Don't have Account? talk to Admin</small>
+            <GoogleLogin onSignIn={handleGmailLogin} />
+            <Divider>Or</Divider>
+
+            <div>
+              <Form
+                name="login"
+                layout="vertical"
+                style={{ maxWidth: 300, margin: "0 auto", marginTop: 24 }}
+                onFinish={(values) => {
+                  handleEmailPasswordLogin(values);
+                }}
+              >
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  rules={[
+                    { required: true, message: "Please input your email!" },
+                    { type: "email", message: "Please enter a valid email!" },
+                  ]}
+                >
+                  <Input
+                    prefix={<UserOutlined className="site-form-item-icon" />}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  rules={[
+                    { required: true, message: "Please input your password!" },
+                  ]}
+                >
+                  <Input.Password
+                    prefix={<LockOutlined className="site-form-item-icon" />}
+                  />
+                </Form.Item>
+
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="login-form-button"
+                    block
+                  >
+                    Log in
+                  </Button>
+                  Or <small>Don't have Account? talk to Admin</small>
+                </Form.Item>
+              </Form>
             </div>
           </div>
         </div>

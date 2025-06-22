@@ -22,10 +22,10 @@ const CreateReview = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result: any = await handleAddReivew(payload);
     if (result?.data?.success) {
-      toast.success("Blog successfully published.");
+      toast.success("Review successfully added.");
       form.resetFields();
     } else {
-      toast.error("Blog publishing failed. Please try again!");
+      toast.error("Review adding failed. Please try again!");
     }
   };
   return (

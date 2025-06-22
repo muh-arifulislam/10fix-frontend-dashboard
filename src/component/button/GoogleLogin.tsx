@@ -1,16 +1,18 @@
 import { GoogleOutlined, LoginOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
-import { useSignInWithGoogle } from "react-firebase-hooks/auth";
-import { auth } from "../../firebase.init";
+import { FC } from "react";
 
-const GoogleLogin = () => {
-  const [signInWithGoogle] = useSignInWithGoogle(auth);
+type GoogleLoginProps = {
+  onSignIn: () => Promise<void> | void;
+};
+
+const GoogleLogin: FC<GoogleLoginProps> = ({ onSignIn }) => {
   return (
     <a
       href=""
       onClick={async (e) => {
         e.preventDefault();
-        await signInWithGoogle();
+        await onSignIn();
       }}
     >
       <div

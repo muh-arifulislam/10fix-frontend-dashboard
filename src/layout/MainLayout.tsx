@@ -9,13 +9,21 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { useScreens } from "../hooks/useScreens";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { auth } from "../firebase.init";
+import { useAppDispatch, useAppSelector } from "../redux/hook";
+import { logout, selectCurrentUser } from "../redux/features/auth/authSlice";
+
+import avatarImg from "../assets/user.png";
 
 const MainLayout: React.FC = () => {
   const [signOut] = useSignOut(auth);
   const [collapsed, setCollapsed] = useState(false);
   const screens = useScreens();
 
-  const [user] = useAuthState(auth);
+  const user = useAppSelector(selectCurrentUser);
+
+  const [googleUser] = useAuthState(auth);
+
+  const dispatch = useAppDispatch();
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -45,6 +53,26 @@ const MainLayout: React.FC = () => {
                     {
                       style: {
                         textAlign: "center",
+                        backgroundColor: "",
+                        color: "",
+                        padding: "10px 50px",
+                      },
+                      label: (
+                        <div>
+                          <span className="text-white">
+                            {user?.fullName ? user?.fullName : "User"}
+                          </span>
+                          <br />
+                          <span className="text-white">
+                            {user?.email ? user?.email : "Email"}
+                          </span>
+                        </div>
+                      ),
+                      key: "1",
+                    },
+                    {
+                      style: {
+                        textAlign: "center",
                         backgroundColor: "slategray",
                         color: "white",
                         padding: "10px 50px",
@@ -53,6 +81,7 @@ const MainLayout: React.FC = () => {
                       label: "Logout",
                       key: "0",
                       onClick: () => {
+                        dispatch(logout());
                         signOut();
                       },
                     },
@@ -63,11 +92,7 @@ const MainLayout: React.FC = () => {
                   <Avatar
                     src={
                       <img
-                        src={
-                          user?.photoURL
-                            ? user?.photoURL
-                            : "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                        }
+                        src={googleUser?.photoURL ?? avatarImg}
                         alt="avatar"
                       />
                     }
