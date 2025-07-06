@@ -146,7 +146,7 @@ const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
             scale: collapsed ? 0 : "1",
           }}
         >
-          10fix.com.bd
+          10fix.netlify.app
         </h4>
       </div>
       <Menu
