@@ -48,7 +48,7 @@ const Login = () => {
         if (!userData) throw new Error("Invalid token");
         dispatch(setUser({ user: userData, token: res.data.data.accessToken }));
         toast.success("Login successful", { id: toastId });
-        navigate("/dashboard/orders");
+        navigate("/dashboard");
       } else throw new Error("Login failed");
     } catch (error: any) {
       toast.error(error?.message ?? "Login failed", { id: toastId });

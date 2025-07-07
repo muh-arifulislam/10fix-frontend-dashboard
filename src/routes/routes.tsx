@@ -19,7 +19,7 @@ import EditBlog from "../pages/shared/blogManagement/EditBlog";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to={"/dashboard/orders"} />,
+    element: <Navigate to={"/dashboard"} />,
     errorElement: <ErrorPage />,
   },
   {
@@ -29,10 +29,6 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to={"/dashboard/orders"} />,
-      },
-      {
-        path: "statistics",
         element: <Statistics />,
       },
       {

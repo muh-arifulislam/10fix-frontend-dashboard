@@ -4,9 +4,7 @@ import Sider from "antd/es/layout/Sider";
 import {
   UserOutlined,
   PieChartOutlined,
-  RiseOutlined,
   CommentOutlined,
-  // ReadOutlined,
   FileDoneOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
@@ -30,12 +28,7 @@ const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
     {
       key: "dashboard",
       icon: <PieChartOutlined />,
-      label: "Dashboard",
-    },
-    {
-      key: "reports",
-      icon: <RiseOutlined />,
-      label: <NavLink to={"/dashboard/statistics"}>Reports</NavLink>,
+      label: <NavLink to={"/dashboard"}>Dashboard</NavLink>,
     },
     {
       key: "1",
@@ -146,7 +139,15 @@ const Sidebar = ({ collapsed }: { collapsed: boolean }) => {
             scale: collapsed ? 0 : "1",
           }}
         >
-          10fix.netlify.app
+          <a
+            href="http://10fix.netlify.app"
+            target="_blank"
+            style={{
+              color: "white",
+            }}
+          >
+            10fix.netlify.app
+          </a>
         </h4>
       </div>
       <Menu

@@ -1,5 +1,5 @@
 import { useGetStatisticsQuery } from "../../../redux/features/stats/statsApi";
-import { Button, Card, Col, Flex, Grid, Row, Space } from "antd";
+import { Button, Card, Col, Flex, Grid, Row, Skeleton, Space } from "antd";
 import StatsCard from "../../../component/ui/StatsCard";
 import {
   CheckCircleOutlined,
@@ -10,9 +10,78 @@ import {
 import LineChart from "../../../component/chart/LineChart";
 
 const Statistics = () => {
-  const { data } = useGetStatisticsQuery(undefined);
+  const { data, isLoading } = useGetStatisticsQuery(undefined);
 
   const screens = Grid.useBreakpoint();
+
+  if (isLoading) {
+    return (
+      <>
+        <div>
+          <Row
+            gutter={[20, 20]}
+            style={{
+              marginBottom: "20px",
+            }}
+          >
+            <Col xs={{ span: 24 }} sm={{ span: 6 }}>
+              <Skeleton.Button
+                active={true}
+                block={true}
+                style={{
+                  height: "120px",
+                }}
+              />
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 6 }}>
+              <Skeleton.Button
+                active={true}
+                block={true}
+                style={{
+                  height: "120px",
+                }}
+              />
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 6 }}>
+              <Skeleton.Button
+                active={true}
+                block={true}
+                style={{
+                  height: "120px",
+                }}
+              />
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 6 }}>
+              <Skeleton.Button
+                active={true}
+                block={true}
+                style={{
+                  height: "120px",
+                }}
+              />
+            </Col>
+          </Row>
+          <div>
+            <Skeleton.Button
+              active={true}
+              block={true}
+              style={{
+                height: "150px",
+                marginBottom: "20px",
+              }}
+            />
+            <Skeleton.Button
+              active={true}
+              block={true}
+              style={{
+                height: "150px",
+              }}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <div>
